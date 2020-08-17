@@ -66,7 +66,6 @@
         mounted() {
           this.id = this.$route.params.id;
           if (this.id) {
-            console.log("编辑")
             this.title = "菜单编辑"
             // 根据id获取某一条菜单
             this.$http.get("/menuinfo", {id: this.id}).then(res => {
