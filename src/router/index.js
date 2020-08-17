@@ -12,6 +12,10 @@ export default new Router({
         {
           path: "menu",
           component: () => import("@/pages/Menu/Menu")
+        },
+        {
+          path: "menu/add",
+          component: () => import("@/pages/Menu/Edit")
         }
       ]
     }

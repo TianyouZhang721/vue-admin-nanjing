@@ -5,7 +5,7 @@
       <el-breadcrumb-item>菜单列表</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-button type="primary">添加</el-button>
+    <el-button @click="add" type="primary">添加</el-button>
 
     <el-table row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :data="tableData" style="width: 100%">
       <el-table-column label="菜单编号" width="180" prop="id">
@@ -59,6 +59,9 @@
       }
     },
     methods: {
+      add() {
+        this.$router.push("/menu/add")
+      },
       handleEdit(index, row) {
         console.log(index, row);
       },
