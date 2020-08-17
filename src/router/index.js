@@ -16,6 +16,10 @@ export default new Router({
         {
           path: "menu/add",
           component: () => import("@/pages/Menu/Edit")
+        },
+        {
+          path: "/menu/:id",
+          component: () => import("@/pages/Menu/Edit")
         }
       ]
     }

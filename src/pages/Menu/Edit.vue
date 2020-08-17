@@ -3,7 +3,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/menu' }">菜单列表</el-breadcrumb-item>
-      <el-breadcrumb-item>菜单添加</el-breadcrumb-item>
+      <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item label="菜单类型" prop="type">
         <el-radio-group v-model="ruleForm.type">
-          <el-radio label="1" >目录</el-radio>
+          <el-radio label="1">目录</el-radio>
           <el-radio label="2">菜单</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -32,7 +32,7 @@
         <el-input v-model="ruleForm.url"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -42,6 +42,7 @@
   export default {
     data() {
           return {
+            title: "",
             menuList: [],
             ruleForm: {
               title: '',
@@ -51,6 +52,7 @@
               status: false,
               url: ""
             },
+            id: "",
             rules: {
               title: [
                 { required: true, message: '请输入菜单名称', trigger: 'blur' },
@@ -62,9 +64,21 @@
           };
         },
         mounted() {
+          this.id = this.$route.params.id;
+          if (this.id) {
+            console.log("编辑")
+            this.title = "菜单编辑"
+            // 根据id获取某一条菜单
+            this.$http.get("/menuinfo", {id: this.id}).then(res => {
+              console.log(res)
+              let {status} = res.data.list
+              this.ruleForm = {...res.data.list, type: res.data.list.type.toString(), status: status == 1? true : false }
+            })
+          } else {
+            this.title = "菜单添加"
+          }
           // 调用菜单列表接口，在下拉框中使用
           this.$http.get("/menulist",{istree: true}).then(res => {
-            console.log(res)
             this.menuList = res.data.list
           })
         },
@@ -72,11 +86,16 @@
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
               if (valid) {
-                console.log(this.ruleForm.type)
                 this.ruleForm.status = this.ruleForm.status ? 1 : 2
-                this.$http.post("/menuadd", this.ruleForm).then(res => {
-                  console.log(res)
-                })
+                if (this.title == "菜单添加") {
+                  this.$http.post("/menuadd", this.ruleForm).then(res => {
+                    console.log(res)
+                  })
+                } else if(this.title == "菜单编辑") {
+                  this.$http.post("/menuedit", {...this.ruleForm, id: this.id}).then(res => {
+                    console.log(res)
+                  })
+                }
               } else {
                 console.log('error submit!!');
                 return false;

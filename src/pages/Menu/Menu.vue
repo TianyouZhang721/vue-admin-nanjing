@@ -64,6 +64,7 @@
       },
       handleEdit(index, row) {
         console.log(index, row);
+        this.$router.push("/menu/" + row.id)
       },
       handleDelete(index, row) {
         console.log(index, row);
