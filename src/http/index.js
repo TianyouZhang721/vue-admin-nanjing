@@ -8,7 +8,10 @@ let instance = axios.create({
 
 instance.interceptors.request.use((config) => {
 	// app.js
+  if (store.state.user.token) {
     config.headers.authorization = store.state.user.token
+  }
+
     return config
 }, err => {
   Promise.reject(err)
@@ -16,10 +19,9 @@ instance.interceptors.request.use((config) => {
 
 
 instance.interceptors.response.use((res) => {
-	console.log(res)
 	if (res.data.code == 403) {
 		router.push("/login")
-	} 
+	}
 	return res
 }, err => {
 	Promise.reject(err)
