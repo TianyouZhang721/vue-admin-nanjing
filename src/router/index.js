@@ -20,7 +20,15 @@ export default new Router({
         {
           path: "/menu/:id",
           component: () => import("@/pages/Menu/Edit")
-        }
+        },
+        {
+          path: "role",
+          component: () => import("@/pages/Role/Role")
+        },
+        {
+          path: "role/add",
+          component: () => import("@/pages/Role/Edit")
+        },
       ]
     }
   ]
