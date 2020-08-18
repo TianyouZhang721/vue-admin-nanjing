@@ -2,19 +2,25 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/role' }">角色列表</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/role' }">管理员列表</el-breadcrumb-item>
       <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="角色名称" prop="rolename">
-        <el-input v-model="ruleForm.rolename"></el-input>
+
+      <el-form-item label="所属角色" prop="roleid">
+        <el-select v-model="ruleForm.roleid" placeholder="请选择角色">
+          <el-option v-for="(item, index) in roleList" :key="index" :label="item.rolename" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
 
-      <el-form-item label="角色权限" prop="menus">
-        <el-tree  ref="tree" :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="ruleForm.menus"
-          :props="defaultProps">
-        </el-tree>
+
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="ruleForm.username"></el-input>
+      </el-form-item>
+
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="ruleForm.password"></el-input>
       </el-form-item>
 
       <el-form-item label="状态" prop="status">
@@ -32,25 +38,31 @@
   export default {
     data() {
       return {
-        data: [],
-        defaultProps: {
-          children: 'children',
-          label: 'title'
-        },
+        roleList: [],
         title: "",
-        menuList: [],
         ruleForm: {
-          rolename: "",
-          menus: [],
+          username: "",
+          password: "",
+          roleid: "",
           status: false,
         },
         id: "",
         rules: {
-          rolename: [{
+          username: [{
             required: true,
             message: '请输入角色名称',
             trigger: 'blur'
-          }, ]
+          }, ],
+          roleid: {
+            required: true,
+            message: '请选择所属角色',
+            trigger: 'change'
+          },
+          password: {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          }
         }
       };
     },
@@ -75,11 +87,9 @@
         this.title = "角色添加"
       }
       // 调用菜单列表接口，在下拉框中使用
-      this.$http.get("/menulist", {
-        istree: true
-      }).then(res => {
+      this.$http.get("/rolelist").then(res => {
         console.log(res)
-        this.data = res.data.list
+        this.roleList = res.data.list
       })
     },
     methods: {
@@ -88,11 +98,8 @@
           if (valid) {
             let obj = JSON.parse(JSON.stringify(this.ruleForm))
             obj.status = obj.status ? 1 : 2
-            this.ruleForm.menus = this.$refs.tree.getCheckedKeys()
-            let arr = JSON.stringify(this.$refs.tree.getCheckedKeys()); //"[1,2,3]""
-            obj.menus = arr
             if (!this.id) {
-              this.$http.post("/roleadd", obj).then(res => {
+              this.$http.post("/useradd", obj).then(res => {
                 console.log(res)
               })
             } else  {

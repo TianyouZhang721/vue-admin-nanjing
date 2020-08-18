@@ -68,6 +68,9 @@
       },
       handleDelete(index, row) {
         console.log(index, row);
+        this.$http.post("/menudelete",{id: row.id}).then(res => {
+          console.log(res)
+        })
       }
     },
     mounted() {

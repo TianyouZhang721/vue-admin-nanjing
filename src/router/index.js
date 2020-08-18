@@ -29,6 +29,18 @@ export default new Router({
           path: "role/add",
           component: () => import("@/pages/Role/Edit")
         },
+        {
+          path: "/role/:id",
+          component: () => import("@/pages/Role/Edit")
+        },
+        {
+          path: "user",
+          component: () => import("@/pages/User/User")
+        },
+        {
+          path: "user/add",
+          component: () => import("@/pages/User/Edit")
+        },
       ]
     }
   ]
