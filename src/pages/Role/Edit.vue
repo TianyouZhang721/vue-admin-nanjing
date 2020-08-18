@@ -12,7 +12,7 @@
       </el-form-item>
 
       <el-form-item label="角色权限" prop="menus">
-        <el-tree  ref="tree" :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="ruleForm.menus"
+        <el-tree @check-change="handleCheckChange"  ref="tree" :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="ruleForm.menus"
           :props="defaultProps">
         </el-tree>
       </el-form-item>
@@ -68,7 +68,7 @@
           } = res.data.list
           this.ruleForm = { ...res.data.list,
             status: status == 1 ? true : false,
-            menus: JSON.parse(res.data.list.menus)
+            menus: res.data.list.menus.split(",")
           }
         })
       } else {
@@ -83,20 +83,23 @@
       })
     },
     methods: {
+      handleCheckChange(data, checked, indeterminate) {
+              console.log(data, checked, indeterminate);
+            },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let obj = JSON.parse(JSON.stringify(this.ruleForm))
             obj.status = obj.status ? 1 : 2
             this.ruleForm.menus = this.$refs.tree.getCheckedKeys()
-            let arr = JSON.stringify(this.$refs.tree.getCheckedKeys()); //"[1,2,3]""
+            let arr = this.$refs.tree.getCheckedKeys(); //"[1,2,3]""
             obj.menus = arr
             if (!this.id) {
               this.$http.post("/roleadd", obj).then(res => {
                 console.log(res)
               })
             } else  {
-              this.$http.post("/roledit", { ...obj,
+              this.$http.post("/roleedit", { ...obj,
                 id: this.id
               }).then(res => {
                 console.log(res)
