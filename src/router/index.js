@@ -41,7 +41,15 @@ export default new Router({
           path: "user/add",
           component: () => import("@/pages/User/Edit")
         },
+        {
+          path: "/user/:id",
+          component: () => import("@/pages/User/Edit")
+        },
       ]
+    },
+    {
+      path: "/login",
+      component:() => import("@/pages/Login/Login")
     }
   ]
 })

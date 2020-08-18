@@ -32,14 +32,19 @@
   export default {
       data() {
         return {
-          menuList: []
+          // menuList: []
         }
       },
       mounted() {
-          this.$http.get("/menulist",{istree: true}).then(res => {
-            console.log(res)
-            this.menuList = res.data.list
-          })
+          // this.$http.get("/menulist",{istree: true}).then(res => {
+          //   console.log(res)
+          //   this.menuList = res.data.list
+          // })
+      },
+      computed: {
+          menuList() {
+            return this.$store.state.user.menus
+          }
       }
   }
 </script>

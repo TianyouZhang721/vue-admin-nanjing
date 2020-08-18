@@ -64,7 +64,7 @@
       },
       handleEdit(index, row) {
         console.log(index, row);
-        this.$router.push("/role/" + row.id)
+        this.$router.push("/user/" + row.uid)
       },
       del(row) {
           console.log("确定删除")

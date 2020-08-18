@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/role' }">管理员列表</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/user' }">管理员列表</el-breadcrumb-item>
       <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
@@ -20,7 +20,7 @@
       </el-form-item>
 
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password"></el-input>
+        <el-input v-model="ruleForm.password" show-password  ></el-input>
       </el-form-item>
 
       <el-form-item label="状态" prop="status">
@@ -69,22 +69,21 @@
     mounted() {
       this.id = this.$route.params.id;
       if (this.id) {
-        this.title = "角色编辑"
+        this.title = "管理员编辑"
         // 根据id获取某一条菜单
-        this.$http.get("/roleinfo", {
-          id: this.id
+        this.$http.get("/userinfo", {
+          uid: this.id
         }).then(res => {
           console.log(res)
           let {
             status
           } = res.data.list
           this.ruleForm = { ...res.data.list,
-            status: status == 1 ? true : false,
-            menus: JSON.parse(res.data.list.menus)
+            status: status == 1 ? true : false
           }
         })
       } else {
-        this.title = "角色添加"
+        this.title = "管理员添加"
       }
       // 调用菜单列表接口，在下拉框中使用
       this.$http.get("/rolelist").then(res => {
@@ -103,8 +102,8 @@
                 console.log(res)
               })
             } else  {
-              this.$http.post("/roledit", { ...obj,
-                id: this.id
+              this.$http.post("/useredit", { ...obj,
+                uid: this.id
               }).then(res => {
                 console.log(res)
               })

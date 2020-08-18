@@ -12,8 +12,18 @@
       </el-form-item>
 
       <el-form-item label="角色权限" prop="menus">
-        <el-tree @check-change="handleCheckChange"  ref="tree" :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="ruleForm.menus"
-          :props="defaultProps">
+        <el-tree
+        @check-change="handleCheckChange"
+        ref="tree"
+        :data="data"
+        show-checkbox
+        node-key="id"
+        default-expand-all
+        :default-checked-keys="ruleForm.menus"
+          :props="defaultProps"
+          check-strictly
+          >
+
         </el-tree>
       </el-form-item>
 
