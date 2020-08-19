@@ -10,6 +10,10 @@ export default new Router({
       component: () => import("@/pages/Container/Container"),
       children: [
         {
+          path: "home",
+          component: () => import("@/pages/Home/Home")
+        },
+        {
           path: "menu",
           component: () => import("@/pages/Menu/Menu")
         },

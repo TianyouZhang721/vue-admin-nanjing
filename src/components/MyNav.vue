@@ -8,7 +8,7 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           router>
-          <el-menu-item index="1">
+          <el-menu-item index="/home">
             <i class="el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
