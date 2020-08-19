@@ -16,8 +16,7 @@
 
       <el-form-item label="二级分类" prop="second_cateid">
         <el-select v-model="ruleForm.second_cateid" placeholder="请选择上级">
-          <el-option label="顶级菜单" value="0"></el-option>
-          <el-option v-for="(item, index) in menuList" :key="index" :label="item.title" :value="item.id"></el-option>
+          <el-option v-for="(item, index) in secondCate" :key="index" :label="item.catename" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
 
@@ -38,8 +37,6 @@
           <el-upload
             action="#"
             list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
             :on-change="fileChange"
             :auto-upload="false"
             :file-list="list">
@@ -49,30 +46,28 @@
 
 
       <el-form-item label="商品规格" prop="specsid">
-        <el-select v-model="ruleForm.specsid" placeholder="请选择上级">
-          <el-option label="顶级菜单" value="0"></el-option>
-          <el-option v-for="(item, index) in menuList" :key="index" :label="item.title" :value="item.id"></el-option>
+        <el-select @change="specChange" v-model="ruleForm.specsid" placeholder="请选择上级">
+          <el-option v-for="(item, index) in specList" :key="index" :label="item.specsname" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item label="规格属性" prop="specsattr">
         <el-select v-model="ruleForm.specsattr" placeholder="请选择上级">
-          <el-option label="顶级菜单" value="0"></el-option>
-          <el-option v-for="(item, index) in menuList" :key="index" :label="item.title" :value="item.id"></el-option>
+          <el-option v-for="(item, index) in attrList" :key="index" :label="item" :value="item"></el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item label="是否热卖" prop="ishot">
         <el-radio-group v-model="ruleForm.ishot">
-          <el-radio label="1">目录</el-radio>
-          <el-radio label="2">菜单</el-radio>
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="2">否</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="是否新品" prop="isnew">
         <el-radio-group v-model="ruleForm.isnew">
-          <el-radio label="1">目录</el-radio>
-          <el-radio label="2">菜单</el-radio>
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="2">否</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -98,7 +93,9 @@
   export default {
     data() {
       return {
+        list: [],
         data: [],
+        img: "",
         defaultProps: {
           children: 'children',
           label: 'title'
@@ -112,7 +109,7 @@
           price: "",
           market_price: "",
           specsid: "",
-          specattr: "",
+          specsattr: "",
           isnew: "",
           ishot: "",
           status: true,
@@ -127,11 +124,19 @@
           }, ]
         },
         editor: null,
-        firstCate: []
+        firstCate: [],
+        secondCate: [],
+        specList: [],
+        attrList: []
       };
     },
     // created() {},
     mounted() {
+      // 获取规格
+      this.$http.get("/specslist", {size: 10, page: 1}).then(res => {
+        console.log(res)
+        this.specList = res.data.list
+      })
       // 获取一级分类
       this.$http.get("/catelist",{pid: 0}).then(res => {
         console.log(res)
@@ -169,25 +174,40 @@
       })
     },
     methods: {
+      specChange(id) {
+          console.log(id)
+          this.attrList = this.specList.find(item => {
+            return item.id == id
+          }).attrs
+      },
+      fileChange(file) {
+          this.img = file.raw
+      },
       firstCateChange(id) {
         console.log(id)
         this.$http.get("/catelist",{pid: id}).then(res => {
           console.log(res)
+          this.secondCate = res.data.list
         })
       },
       handleCheckChange(data, checked, indeterminate) {
               console.log(data, checked, indeterminate);
             },
+
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let obj = JSON.parse(JSON.stringify(this.ruleForm))
-            obj.status = obj.status ? 1 : 2
-            this.ruleForm.menus = this.$refs.tree.getCheckedKeys()
-            let arr = this.$refs.tree.getCheckedKeys(); //"[1,2,3]""
-            obj.menus = arr
             if (!this.id) {
-              this.$http.post("/roleadd", obj).then(res => {
+              let form = new FormData()
+              this.ruleForm.description = this.editor.txt.html()
+              this.ruleForm.status = this.ruleForm.status ? 1 : 2
+
+              console.log(this.ruleForm)
+              for(var key in this.ruleForm) {
+                form.append(key, this.ruleForm[key])
+              }
+              form.append("img", this.img)
+              this.$http.post("/goodsadd", form).then(res => {
                 console.log(res)
               })
             } else  {

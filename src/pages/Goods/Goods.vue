@@ -75,7 +75,7 @@
           case 1:
             return "是";
             break;
-          case 2:
+          default:
             return "否"
             break;
         }
