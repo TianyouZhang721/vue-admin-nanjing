@@ -19,9 +19,9 @@ instance.interceptors.request.use((config) => {
 
 
 instance.interceptors.response.use((res) => {
-	if (res.data.code == 403) {
-		router.push("/login")
-	}
+	// if (res.data.code == 403) {
+	// 	router.push("/login")
+	// }
 	return res
 }, err => {
 	Promise.reject(err)

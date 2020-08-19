@@ -88,6 +88,7 @@
           },
           handleEdit(index, row) {
             console.log(index, row);
+            this.$router.push("/category/" + row.id)
           },
           handleDelete(index, row) {
             console.log(index, row);

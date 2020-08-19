@@ -53,6 +53,18 @@ export default new Router({
           path: "category/add",
           component: () => import("@/pages/Category/Edit")
         },
+        {
+          path: "/category/:id",
+          component: () => import("@/pages/Category/Edit")
+        },
+        {
+          path: "goods",
+          component: () => import("@/pages/Goods/Goods")
+        },
+        {
+          path: "goods/add",
+          component: () => import("@/pages/Goods/Edit")
+        },
       ]
     },
     {
