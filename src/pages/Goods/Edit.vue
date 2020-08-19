@@ -148,20 +148,26 @@
       this.editor = new wangEditor("#editor")
       this.editor.create()
       if (this.id) {
-        this.title = "角色编辑"
-        // 根据id获取某一条菜单
-        this.$http.get("/roleinfo", {
+        this.title = "商品编辑"
+        // 根据id获取某一条商品
+        this.$http.get("/goodsinfo", {
           id: this.id
         }).then(res => {
           console.log(res)
           let {
-            status
+            status, isnew, ishot
           } = res.data.list
           this.ruleForm = { ...res.data.list,
             status: status == 1 ? true : false,
-            menus: res.data.list.menus.split(",")
+            isnew:isnew == 0 ? 2 : 1 ,
+            ishot: ishot == 0 ? 2 : 1,
           }
+          this.editor.txt.html(res.data.list.description)
+          this.$http.get("/catelist", {pid: this.ruleForm.first_cateid}).then(res => {
+                this.secondCate = res.data.list
+          })
         })
+
       } else {
         this.title = "角色添加"
       }

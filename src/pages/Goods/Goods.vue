@@ -54,6 +54,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :current-page="currentPage"
+      :page-size="5"
+      @current-change="change">
+    </el-pagination>
   </div>
 </template>
 
@@ -83,16 +91,23 @@
     },
     data() {
       return {
-        tableData: []
+        currentPage: 1,
+        tableData: [],
+        total: 0,
       }
     },
     methods: {
+      change(n) {
+        console.log(n)
+        this.currentPage = n;
+        this.getList()
+      },
       add() {
         this.$router.push("/goods/add")
       },
       handleEdit(index, row) {
         console.log(index, row);
-        this.$router.push("/role/" + row.id)
+        this.$router.push("/goods/" + row.id)
       },
       del(row) {
           console.log("确定删除")
@@ -107,7 +122,7 @@
         console.log("点错了")
       },
       getList() {
-        this.$http.get("/goodslist", {size: 10, page: 1}).then(res => {
+        this.$http.get("/goodslist", {size: 5, page: this.currentPage}).then(res => {
           console.log(res)
           this.tableData = res.data.list
         })
@@ -115,12 +130,17 @@
     },
     mounted() {
       this.getList()
+      // 获取商品总数
+      this.$http.get("/goodscount").then(res => {
+        console.log(res)
+        this.total = res.data.list[0].total
+      })
     }
   }
 </script>
 
 <style scoped>
 img {
-  width: 120px;
+  width: 100px;
 }
 </style>

@@ -65,6 +65,10 @@ export default new Router({
           path: "goods/add",
           component: () => import("@/pages/Goods/Edit")
         },
+        {
+          path: "/goods/:id",
+          component: () => import("@/pages/Goods/Edit")
+        },
       ]
     },
     {
